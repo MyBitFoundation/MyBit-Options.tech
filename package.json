@@ -1,0 +1,30 @@
+{
+  "name": "mybit-options",
+  "version": "1.0.0",
+  "description": "Call and put options for ERC-20 tokens",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MyBitFoundation/MyBit-Options.tech.git"
+  },
+  "keywords": [
+    "mybit",
+    "ethereum",
+    "solidity",
+    "finance",
+    "trading",
+    "options"
+  ],
+  "author": "MyBit Foundation",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MyBitFoundation/MyBit-Options.tech/issues"
+  },
+  "homepage": "https://github.com/MyBitFoundation/MyBit-Options.tech#readme"
+}
