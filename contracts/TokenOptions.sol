@@ -9,7 +9,9 @@ contract TokenOptions is MyBitDapp{
   using SafeMath for uint;
   using StringUtils for string;
 
-  struct Order{
+  ERC20 token;
+
+  struct Option{
     string optionType;
     address tokenAddress;
     uint tokens;
@@ -22,7 +24,7 @@ contract TokenOptions is MyBitDapp{
   }
 
   //mapping(address => uint) private balances;
-  mapping(bytes32 => Order) public options;
+  mapping(bytes32 => Option) public options;
   mapping(bytes32 => address) private optionSellers;
   mapping(bytes32 => address) private optionBuyers;
   //mapping(address => bytes32[]) private optionBook;
@@ -46,7 +48,7 @@ contract TokenOptions is MyBitDapp{
   payable
   external{
     //ERC20(tokenAddress).transferFrom(msg.sender, address(this), tokens);
-    require(msg.value == _strikePrice.mul(_tokens) );
+    require(msg.value == _strikePrice.mul(_tokens).div(decimals) );
     //amount = _strikePrice.mul(_tokens);
     createOption('Put', msg.sender, _tokenAddress, _tokens, _strikePrice, _premium, _blockUntilExpiry);
   }
@@ -77,11 +79,9 @@ contract TokenOptions is MyBitDapp{
     if(remainder > 0){
       //If it's a put option, return ether remainder
       if(options[_optionID].optionType.equal('Put')){
-        uint amount = options[_optionID].strikePrice.mul(remainder);
+        uint amount = options[_optionID].strikePrice.mul(remainder).div(decimals);
         optionSellers[_optionID].transfer(amount);
-      }
-      //If it's a call option, return token remainder
-      if(options[_optionID].optionType.equal('Call')){
+      } else {
         ERC20(options[_optionID].tokenAddress).transfer(optionSellers[_optionID], remainder);
       }
     }
@@ -90,7 +90,6 @@ contract TokenOptions is MyBitDapp{
   }
 
   function exercisePut(bytes32 _optionID, uint _tokens)
-  payable
   external{
     require(!options[_optionID].exercised);
     require(!options[_optionID].cancelled);
@@ -102,12 +101,12 @@ contract TokenOptions is MyBitDapp{
     //Give seller tokens
     require(ERC20(options[_optionID].tokenAddress).transferFrom(msg.sender, optionSellers[_optionID], _tokens));
     //Buyer receive ether from escrow
-    uint amount = options[_optionID].strikePrice.mul(_tokens);
+    uint amount = options[_optionID].strikePrice.mul(_tokens).div(decimals);
     msg.sender.transfer(amount);
     //Return remaining balance to seller
     uint remainder = options[_optionID].tokens.sub(_tokens);
     if(remainder > 0){
-      amount = options[_optionID].strikePrice.mul(remainder);
+      amount = options[_optionID].strikePrice.mul(remainder).div(decimals);
       optionSellers[_optionID].transfer(amount);
     }
   }
@@ -120,14 +119,15 @@ contract TokenOptions is MyBitDapp{
     require(optionBuyers[_optionID] == msg.sender);
     require(options[_optionID].expiry > block.number);
     require(options[_optionID].tokens >= _tokens);
-    require(options[_optionID].strikePrice.mul(_tokens) == msg.value);
+    require(options[_optionID].strikePrice.mul(_tokens).div(decimals) == msg.value);
     //Mark option exercised
     options[_optionID].exercised = true;
     //Give seller ether
-    uint amount = options[_optionID].strikePrice.mul(_tokens);
+    uint amount = options[_optionID].strikePrice.mul(_tokens).div(decimals);
+
     optionSellers[_optionID].transfer(amount);
     //Buyer receives tokens from escrow
-    ERC20(options[_optionID].tokenAddress).transferFrom(msg.sender, optionSellers[_optionID], _tokens);
+    ERC20(options[_optionID].tokenAddress).transfer(msg.sender, _tokens);
     //Return remaining balance to seller
     uint remainder = options[_optionID].tokens.sub(_tokens);
     if(remainder > 0){
@@ -143,16 +143,15 @@ contract TokenOptions is MyBitDapp{
     } else {
       require(msg.sender == optionSellers[_optionID]);
     }
+    options[_optionID].cancelled = true;
     //address tokenAddress = options[_optionID].tokenAddress;
     //uint tokens = options[_optionID].tokens;
     //uint strikePrice = options[_optionID].strikePrice;
     //If it's a put option, return ether
     if(options[_optionID].optionType.equal('Put')){
-      uint amount = options[_optionID].strikePrice.mul(options[_optionID].tokens);
+      uint amount = options[_optionID].strikePrice.mul(options[_optionID].tokens).div(decimals);
       optionSellers[_optionID].transfer(amount);
-    }
-    //If it's a call option, return tokens
-    if(options[_optionID].optionType.equal('Call')){
+    } else {
       ERC20(options[_optionID].tokenAddress).transfer(optionSellers[_optionID], options[_optionID].tokens);
     }
   }
@@ -165,7 +164,7 @@ contract TokenOptions is MyBitDapp{
     options[_optionID].cancelled = true;
     //If it's a put option, return ether
     if(options[_optionID].optionType.equal('Put')){
-      uint amount = options[_optionID].strikePrice.mul(options[_optionID].tokens);
+      uint amount = options[_optionID].strikePrice.mul(options[_optionID].tokens).div(decimals);
       optionSellers[_optionID].transfer(amount);
     }
     //If it's a call option, return tokens
@@ -191,4 +190,5 @@ contract TokenOptions is MyBitDapp{
 
   event logNewOption(bytes32 _optionID, string _type, address _tokenAddress, uint _tokens, uint _strikePrice, uint _premium, uint _expiry);
   event logPayment(uint _payment);
+  event logAddress(address _address);
 }

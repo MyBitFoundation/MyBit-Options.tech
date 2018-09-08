@@ -2,12 +2,29 @@
   "name": "mybit-options",
   "version": "1.0.0",
   "description": "Call and put options for ERC-20 tokens",
-  "main": "truffle-config.js",
+  "main": "truffle.js",
   "directories": {
+    "doc": "docgen/docs",
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "compile": "truffle compile --all",
+    "migrate": "truffle migrate",
+    "test": "npm run compile; npm run migrate; truffle test",
+    "blockchain": "ganache-cli --networkId 70 --accounts 20",
+    "coverage": "solidity-coverage && sleep 5 && npm run coveralls",
+    "coveralls": "cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+  },
+  "dependencies": {
+    "bignumber.js": "^7.2.1",
+    "coveralls": "^3.0.2",
+    "ganache-cli": "^6.1.0",
+    "request": "^2.87.0",
+    "solc": "^0.4.24",
+    "truffle": "^4.1.14"
+  },
+  "devDependencies": {
+    "solidity-coverage": "^0.5.11"
   },
   "repository": {
     "type": "git",

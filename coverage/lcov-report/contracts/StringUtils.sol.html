@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for contracts/StringUtils.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">contracts/</a> StringUtils.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">46.67% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>14/30</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">44.44% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>8/18</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">66.67% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>2/3</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">40.74% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>11/27</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-yes">30×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">pragma solidity ^0.4.24;
+&nbsp;
+library StringUtils {
+    /// @dev Does a byte-by-byte lexicographical comparison of two strings.
+    /// @return a negative number if `_a` is smaller, zero if they are equal
+    /// and a positive numbe if `_b` is smaller.
+    function compare(string _a, string _b) internal pure returns (int) {
+        bytes memory a = bytes(_a);
+        bytes memory b = bytes(_b);
+        uint minLength = a.length;
+        if (b.length &lt; minLength) minLength = b.length;
+        //@todo unroll the loop into increments of 32 and do full 32 byte comparisons
+        for (uint i = 0; i &lt; minLength; i ++)
+            if (a[i] &lt; b[i])
+                return -1;
+            else if (a[i] &gt; b[i])
+                return 1;
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (a.length &lt; b.length)
+<span class="cstat-no" title="statement not covered" >            return -1;</span>
+        else <span class="missing-if-branch" title="if path not taken" >I</span>if (a.length &gt; b.length)
+<span class="cstat-no" title="statement not covered" >            return 1;</span>
+        else
+            return 0;
+    }
+    /// @dev Compares two strings and returns true iff they are equal.
+    function equal(string _a, string _b) internal pure returns (bool) {
+        return compare(_a, _b) == 0;
+    }
+    /// @dev Finds the index of the first occurrence of _needle in _haystack
+<span class="fstat-no" title="function not covered" >    function indexOf(string _haystack, string _needle) internal pure returns (int)</span>
+    {
+<span class="cstat-no" title="statement not covered" >    	bytes memory h = bytes(_haystack)</span>;
+<span class="cstat-no" title="statement not covered" >    	bytes memory n = bytes(_needle)</span>;
+<span class="cstat-no" title="statement not covered" >    	if(h.length &lt; 1 || n.length &lt; 1 || (n.length &gt; h.length))</span>
+<span class="cstat-no" title="statement not covered" >    		return -1;</span>
+    	else <span class="cstat-no" title="statement not covered" >if(h.length &gt; (2**128 -1)) // since we have to be able to return -1 (if the char isn't found or input error), this function must return an "int" type with a max length of (2^128 - 1)</span>
+<span class="cstat-no" title="statement not covered" >    		return -1;</span>
+    	else
+    	{
+<span class="cstat-no" title="statement not covered" >    		uint subindex = 0</span>;
+<span class="cstat-no" title="statement not covered" >    		for (uint i = 0; i &lt; h.length; i ++)</span>
+    		{
+<span class="cstat-no" title="statement not covered" >    			if (h[i] == n[0]) // found the first char of b</span>
+    			{
+<span class="cstat-no" title="statement not covered" >    				subindex = 1</span>;
+<span class="cstat-no" title="statement not covered" >    				while(subindex &lt; n.length &amp;&amp; (i + subindex) &lt; h.length &amp;&amp; h[i + subindex] == n[subindex]) // search until the chars don't match or until we reach the end of a or b</span>
+    				{
+    					subindex++;
+    				}
+<span class="cstat-no" title="statement not covered" >    				if(subindex == n.length)</span>
+<span class="cstat-no" title="statement not covered" >    					return int(i);</span>
+    			}
+    		}
+<span class="cstat-no" title="statement not covered" >    		return -1;</span>
+    	}
+    }
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Sep 07 2018 21:15:37 GMT-0700 (PDT)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

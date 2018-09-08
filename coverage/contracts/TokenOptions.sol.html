@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for contracts/TokenOptions.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">contracts/</a> TokenOptions.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>69/69</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>68/68</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>8/8</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>76/76</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">pragma solidity ^0.4.24;
+&nbsp;
+import './ERC20.sol';
+import './MyBitDapp.sol';
+import './StringUtils.sol';
+import './SafeMath.sol';
+&nbsp;
+contract TokenOptions is MyBitDapp{
+  using SafeMath for uint;
+  using StringUtils for string;
+&nbsp;
+  ERC20 token;
+&nbsp;
+  struct Option{
+    string optionType;
+    address tokenAddress;
+    uint tokens;
+    uint strikePrice;
+    uint premium; //Not sure if this is needed if premium is calculated at time of purchase
+    uint expiry;
+    bool purchased;
+    bool exercised;
+    bool cancelled;
+  }
+&nbsp;
+  //mapping(address =&gt; uint) private balances;
+  mapping(bytes32 =&gt; Option) public options;
+  mapping(bytes32 =&gt; address) private optionSellers;
+  mapping(bytes32 =&gt; address) private optionBuyers;
+  //mapping(address =&gt; bytes32[]) private optionBook;
+&nbsp;
+  function createOption(string _type, address _sellerAddress, address _tokenAddress, uint _tokens, uint _strikePrice, uint _premium, uint _blockUntilExpiry) private{
+    uint expiry = block.number.add(_blockUntilExpiry);
+    bytes32 optionID = encode(_type, _sellerAddress, _tokenAddress, _strikePrice, expiry);
+    require(optionSellers[optionID] == address(0));
+    options[optionID].optionType = _type;
+    options[optionID].tokenAddress = _tokenAddress;
+    options[optionID].tokens = _tokens;
+    options[optionID].strikePrice = _strikePrice;
+    options[optionID].premium = _premium;
+    options[optionID].expiry = expiry;
+    optionSellers[optionID] = _sellerAddress;
+    emit logNewOption(optionID, _type, _tokenAddress, _tokens, _strikePrice, _premium, expiry);
+  }
+&nbsp;
+  // @dev should premium be decided algorithmically at the time of purchase??
+  function sellPut(address _tokenAddress, uint _tokens, uint _strikePrice, uint _premium, uint _blockUntilExpiry) //Short put
+  payable
+  external{
+    //ERC20(tokenAddress).transferFrom(msg.sender, address(this), tokens);
+    require(msg.value == _strikePrice.mul(_tokens).div(decimals) );
+    //amount = _strikePrice.mul(_tokens);
+    createOption('Put', msg.sender, _tokenAddress, _tokens, _strikePrice, _premium, _blockUntilExpiry);
+  }
+&nbsp;
+  // @dev should premium be decided algorithmically at the time of purchase??
+  function sellCall(address _tokenAddress, uint _tokens, uint _strikePrice, uint _premium, uint _blockUntilExpiry) //Short call
+  external{
+    require(ERC20(_tokenAddress).transferFrom(msg.sender, address(this), _tokens));
+    createOption('Call', msg.sender, _tokenAddress, _tokens, _strikePrice, _premium, _blockUntilExpiry);
+  }
+&nbsp;
+  function buyOption(bytes32 _optionID, uint _tokens)
+  payable
+  external{
+    require(!options[_optionID].purchased);
+    require(!options[_optionID].cancelled);
+    require(options[_optionID].tokens &gt;= _tokens);
+    //Pay premium to the option seller
+    uint payment = _tokens.mul(options[_optionID].premium).div(decimals);
+    emit logPayment(payment);
+    assert(msg.value == payment);
+    optionSellers[_optionID].transfer(payment);
+    //Give ownership of the option to buyer
+    options[_optionID].purchased = true;
+    optionBuyers[_optionID] = msg.sender;
+    //Check if any escrow needs to be returned to seller
+    uint remainder = options[_optionID].tokens.sub(_tokens);
+    if(remainder &gt; 0){
+      //If it's a put option, return ether remainder
+      if(options[_optionID].optionType.equal('Put')){
+        uint amount = options[_optionID].strikePrice.mul(remainder).div(decimals);
+        optionSellers[_optionID].transfer(amount);
+      } else {
+        ERC20(options[_optionID].tokenAddress).transfer(optionSellers[_optionID], remainder);
+      }
+    }
+    //Set the correct token value
+    options[_optionID].tokens = _tokens;
+  }
+&nbsp;
+  function exercisePut(bytes32 _optionID, uint _tokens)
+  external{
+    require(!options[_optionID].exercised);
+    require(!options[_optionID].cancelled);
+    require(optionBuyers[_optionID] == msg.sender);
+    require(options[_optionID].expiry &gt; block.number);
+    require(options[_optionID].tokens &gt;= _tokens);
+    //Mark option exercised
+    options[_optionID].exercised = true;
+    //Give seller tokens
+    require(ERC20(options[_optionID].tokenAddress).transferFrom(msg.sender, optionSellers[_optionID], _tokens));
+    //Buyer receive ether from escrow
+    uint amount = options[_optionID].strikePrice.mul(_tokens).div(decimals);
+    msg.sender.transfer(amount);
+    //Return remaining balance to seller
+    uint remainder = options[_optionID].tokens.sub(_tokens);
+    if(remainder &gt; 0){
+      amount = options[_optionID].strikePrice.mul(remainder).div(decimals);
+      optionSellers[_optionID].transfer(amount);
+    }
+  }
+&nbsp;
+  function exerciseCall(bytes32 _optionID, uint _tokens)
+  payable
+  external{
+    require(!options[_optionID].exercised);
+    require(!options[_optionID].cancelled);
+    require(optionBuyers[_optionID] == msg.sender);
+    require(options[_optionID].expiry &gt; block.number);
+    require(options[_optionID].tokens &gt;= _tokens);
+    require(options[_optionID].strikePrice.mul(_tokens).div(decimals) == msg.value);
+    //Mark option exercised
+    options[_optionID].exercised = true;
+    //Give seller ether
+    uint amount = options[_optionID].strikePrice.mul(_tokens).div(decimals);
+&nbsp;
+    optionSellers[_optionID].transfer(amount);
+    //Buyer receives tokens from escrow
+    ERC20(options[_optionID].tokenAddress).transfer(msg.sender, _tokens);
+    //Return remaining balance to seller
+    uint remainder = options[_optionID].tokens.sub(_tokens);
+    if(remainder &gt; 0){
+      ERC20(options[_optionID].tokenAddress).transfer(optionSellers[_optionID], remainder);
+    }
+  }
+&nbsp;
+  function cancelOption(bytes32 _optionID) external{
+    require(options[_optionID].expiry &gt; block.number);
+    require(!options[_optionID].exercised);
+    if(options[_optionID].purchased){
+      require(msg.sender == optionBuyers[_optionID]);
+    } else {
+      require(msg.sender == optionSellers[_optionID]);
+    }
+    options[_optionID].cancelled = true;
+    //address tokenAddress = options[_optionID].tokenAddress;
+    //uint tokens = options[_optionID].tokens;
+    //uint strikePrice = options[_optionID].strikePrice;
+    //If it's a put option, return ether
+    if(options[_optionID].optionType.equal('Put')){
+      uint amount = options[_optionID].strikePrice.mul(options[_optionID].tokens).div(decimals);
+      optionSellers[_optionID].transfer(amount);
+    } else {
+      ERC20(options[_optionID].tokenAddress).transfer(optionSellers[_optionID], options[_optionID].tokens);
+    }
+  }
+&nbsp;
+  function liquidateOption(bytes32 _optionID) external {
+    require(options[_optionID].expiry &lt;= block.number);
+    require(!options[_optionID].exercised);
+    require(!options[_optionID].cancelled);
+    //Mark option as cancelled
+    options[_optionID].cancelled = true;
+    //If it's a put option, return ether
+    if(options[_optionID].optionType.equal('Put')){
+      uint amount = options[_optionID].strikePrice.mul(options[_optionID].tokens).div(decimals);
+      optionSellers[_optionID].transfer(amount);
+    }
+    //If it's a call option, return tokens
+    if(options[_optionID].optionType.equal('Call')){
+      ERC20(options[_optionID].tokenAddress).transfer( optionSellers[_optionID], options[_optionID].tokens);
+    }
+  }
+&nbsp;
+/**
+  function viewOpenPuts(_tokenAddress) external {}
+&nbsp;
+  function viewOpenCalls(_tokenAddress) external {}
+*/
+/**
+  function withdraw() external{
+    require(balances[msg.sender] &gt; 0);
+  }
+&nbsp;
+  function withdrawToken(_tokenAddress) external{
+&nbsp;
+  }
+*/
+&nbsp;
+  event logNewOption(bytes32 _optionID, string _type, address _tokenAddress, uint _tokens, uint _strikePrice, uint _premium, uint _expiry);
+  event logPayment(uint _payment);
+  event logAddress(address _address);
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Sep 07 2018 21:15:37 GMT-0700 (PDT)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

@@ -1,55 +1,81 @@
 pragma solidity ^0.4.24;
 
-/// @title Payroll smart contract for simple payroll distribution
-/// @author Kyle Dewhurst, MyBit Foundation
-/// @notice Allows owner of organization set the addresses and how much to distribute to employees
-
-import './SafeMath.sol';
 import './ERC20.sol';
 
+/// @title A contract for burning MYB tokens as usage fee for dapps
+/// @author Kyle Dewhurst, MyBit Foundation
+/// @notice Allows Dapps to call this contract to burn MYB as a usage fee
+/// @dev This contract does not accept tokens. It only burns tokens from users wallets when approved to do so
 contract MyBitBurner {
-  using SafeMath for uint;
 
-  ERC20 public mybToken;
-  address public owner;
-  mapping (address => bool) public authorizedBurner;
+  ERC20 public mybToken;  // The instance of the MyBitBurner contract
+  address public owner;           // Owner can add or remove authorized contracts
 
+  mapping (address => bool) public authorizedBurner;    // A mapping showing which addresses are allowed to call the burn function
+
+  // @notice constructor: instantiates myb token address and sets owner
+  // @param (address) _myBitTokenAddress = The MyBit token address
   constructor(address _myBitTokenAddress)
   public {
     mybToken = ERC20(_myBitTokenAddress);
     owner = msg.sender;
   }
 
-
+  // @notice authorized contracts can burn mybit tokens here if the user has approved this contract to do so
+  // @param (address) _tokenHolder = the address of the mybit token holder who wishes to burn _amount of tokens
+  // @param (uint) _amount = the amount of tokens to be burnt (must include decimal places)
   function burn(address _tokenHolder, uint _amount)
   external
   returns (bool) {
     require(authorizedBurner[msg.sender]);
-    require(mybToken.allowance(_tokenHolder, address(this)) >= _amount);
+    //require(mybToken.allowance(_tokenHolder, address(this)) >= _amount);
     require(mybToken.burnFrom(_tokenHolder, _amount));
     emit LogMYBBurned(_tokenHolder, msg.sender, _amount);
     return true;
   }
 
+  // @notice owner can authorize a contract to burn MyBit here
+  // @param the address of the mybit dapp contract
   function authorizeBurner(address _burningContract)
   external
+  onlyOwner
   returns (bool) {
-    require(msg.sender == owner);
-    require(!authorizedBurner[msg.sender]);
+    require(!authorizedBurner[_burningContract]);
     authorizedBurner[_burningContract] = true;
     emit LogBurnerAuthorized(msg.sender, _burningContract);
     return true;
   }
 
+  // @notice owner can revoke a contracts authorization to burn MyBit here
+  // @param the address of the mybit dapp contract
   function removeBurner(address _burningContract)
   external
+  onlyOwner
   returns (bool) {
-    require(msg.sender == owner);
-    require(authorizedBurner[msg.sender]);
+    require(authorizedBurner[_burningContract]);
     delete authorizedBurner[_burningContract];
+    emit LogBurnerRemoved(msg.sender, _burningContract);
     return true;
   }
 
-  event LogMYBBurned(address _tokenHolder, address _burningContract, uint _amount);
+  // @notice fallback function. Rejects all ether
+  function ()
+  payable
+  external {
+    revert();
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //                                            Modifiers
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // @notice reverts if msg.sender isn't the owner
+  modifier onlyOwner {
+    require(msg.sender == owner);
+    _;
+  }
+
+  event LogMYBBurned(address indexed _tokenHolder, address indexed _burningContract, uint _amount);
   event LogBurnerAuthorized(address _owner, address _burningContract);
+  event LogBurnerRemoved(address _owner, address _burningContract);
 }
