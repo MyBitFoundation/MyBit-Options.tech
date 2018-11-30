@@ -29,8 +29,8 @@ contract TokenOptions is MyBitDapp{
   mapping(bytes32 => address) private optionBuyers;
   //mapping(address => bytes32[]) private optionBook;
 
-  function createOption(string _type, address _sellerAddress, address _tokenAddress, uint _tokens, uint _strikePrice, uint _premium, uint _blockUntilExpiry) private{
-    uint expiry = block.number.add(_blockUntilExpiry);
+  function createOption(string _type, address _sellerAddress, address _tokenAddress, uint _tokens, uint _strikePrice, uint _premium, uint _secUntilExpiry) private{
+    uint expiry = block.timestamp.add(_secUntilExpiry);
     bytes32 optionID = encode(_type, _sellerAddress, _tokenAddress, _strikePrice, expiry);
     require(optionSellers[optionID] == address(0));
     options[optionID].optionType = _type;
@@ -44,20 +44,20 @@ contract TokenOptions is MyBitDapp{
   }
 
   // @dev should premium be decided algorithmically at the time of purchase??
-  function sellPut(address _tokenAddress, uint _tokens, uint _strikePrice, uint _premium, uint _blockUntilExpiry) //Short put
+  function sellPut(address _tokenAddress, uint _tokens, uint _strikePrice, uint _premium, uint _secUntilExpiry) //Short put
   payable
   external{
     //ERC20(tokenAddress).transferFrom(msg.sender, address(this), tokens);
     require(msg.value == _strikePrice.mul(_tokens).div(decimals) );
     //amount = _strikePrice.mul(_tokens);
-    createOption('Put', msg.sender, _tokenAddress, _tokens, _strikePrice, _premium, _blockUntilExpiry);
+    createOption('Put', msg.sender, _tokenAddress, _tokens, _strikePrice, _premium, _secUntilExpiry);
   }
 
   // @dev should premium be decided algorithmically at the time of purchase??
-  function sellCall(address _tokenAddress, uint _tokens, uint _strikePrice, uint _premium, uint _blockUntilExpiry) //Short call
+  function sellCall(address _tokenAddress, uint _tokens, uint _strikePrice, uint _premium, uint _secUntilExpiry) //Short call
   external{
     require(ERC20(_tokenAddress).transferFrom(msg.sender, address(this), _tokens));
-    createOption('Call', msg.sender, _tokenAddress, _tokens, _strikePrice, _premium, _blockUntilExpiry);
+    createOption('Call', msg.sender, _tokenAddress, _tokens, _strikePrice, _premium, _secUntilExpiry);
   }
 
   function buyOption(bytes32 _optionID, uint _tokens)
@@ -94,7 +94,7 @@ contract TokenOptions is MyBitDapp{
     require(!options[_optionID].exercised);
     require(!options[_optionID].cancelled);
     require(optionBuyers[_optionID] == msg.sender);
-    require(options[_optionID].expiry > block.number);
+    require(options[_optionID].expiry > block.timestamp);
     require(options[_optionID].tokens >= _tokens);
     //Mark option exercised
     options[_optionID].exercised = true;
@@ -117,7 +117,7 @@ contract TokenOptions is MyBitDapp{
     require(!options[_optionID].exercised);
     require(!options[_optionID].cancelled);
     require(optionBuyers[_optionID] == msg.sender);
-    require(options[_optionID].expiry > block.number);
+    require(options[_optionID].expiry > block.timestamp);
     require(options[_optionID].tokens >= _tokens);
     require(options[_optionID].strikePrice.mul(_tokens).div(decimals) == msg.value);
     //Mark option exercised
@@ -136,7 +136,7 @@ contract TokenOptions is MyBitDapp{
   }
 
   function cancelOption(bytes32 _optionID) external{
-    require(options[_optionID].expiry > block.number);
+    require(options[_optionID].expiry > block.timestamp);
     require(!options[_optionID].exercised);
     if(options[_optionID].purchased){
       require(msg.sender == optionBuyers[_optionID]);
@@ -157,7 +157,7 @@ contract TokenOptions is MyBitDapp{
   }
 
   function liquidateOption(bytes32 _optionID) external {
-    require(options[_optionID].expiry <= block.number);
+    require(options[_optionID].expiry <= block.timestamp);
     require(!options[_optionID].exercised);
     require(!options[_optionID].cancelled);
     //Mark option as cancelled

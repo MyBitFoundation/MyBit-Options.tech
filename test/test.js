@@ -7,7 +7,7 @@ const Token = artifacts.require('./ERC20.sol');
 const decimals = 1000000000000000000;
 const tokenSupply = 10000*decimals;
 const premium = 0.05*decimals; //5% premium
-const blocksUntilExpiry = 100;
+const secUntilExpiry = 86400;
 
 const owner = web3.eth.accounts[0];
 const buyer1 = web3.eth.accounts[1];
@@ -17,18 +17,17 @@ let currentPrice = 0.8*decimals;
 
 let options;
 let optionID;
+let optionExpiry;
 let token;
 let tokenAddress;
 
-function advanceBlock () {
-  return new Promise((resolve, reject) => {
-    web3.currentProvider.sendAsync({
-      jsonrpc: '2.0',
-      method: 'evm_mine',
-      id: Date.now(),
-    }, (err, res) => {
-      return err ? reject(err) : resolve(res);
-    });
+function advanceTime () {
+  web3.currentProvider.send({
+      jsonrpc: "2.0",
+      method: "evm_increaseTime",
+      params: [secUntilExpiry], id: 0
+  }, function(){
+    console.log('Move forward in time');
   });
 }
 
@@ -55,7 +54,7 @@ contract('Token Options', async() => {
   it('Fail to create sell call', async() => {
     let err;
     try{
-      await options.sellCall(tokenAddress, 100*decimals, 0.5*decimals, premium, blocksUntilExpiry);
+      await options.sellCall(tokenAddress, 100*decimals, 0.5*decimals, premium, secUntilExpiry);
     } catch(e){
       err = e;
     }
@@ -64,7 +63,7 @@ contract('Token Options', async() => {
 
   it('Sell call', async() => {
     token.approve(options.address, 10000*decimals);
-    tx = await options.sellCall(tokenAddress, 100*decimals, 0.5*decimals, premium, blocksUntilExpiry);
+    tx = await options.sellCall(tokenAddress, 100*decimals, 0.5*decimals, premium, secUntilExpiry);
     optionID = tx.logs[0].args._optionID;
     console.log(optionID);
     optionStruct = await options.options(optionID);
@@ -84,7 +83,7 @@ contract('Token Options', async() => {
     assert.equal(optionTokens, 100*decimals);
     assert.equal(optionStrike, 0.5*decimals);
     assert.equal(optionPremium, premium);
-    assert.equal(optionExpiry, web3.eth.getBlock('latest').number + blocksUntilExpiry)
+    assert.equal(optionExpiry, await web3.eth.getBlock('latest').timestamp + secUntilExpiry)
     assert.equal(optionPurchased, false);
     assert.equal(optionCancelled, false);
   });
@@ -92,8 +91,9 @@ contract('Token Options', async() => {
   it('Fail to create sell call', async() => {
     let err;
     try{
-      token.approve(options.address, 10000*decimals);
-      tx = await options.sellCall(tokenAddress, 100*decimals, 0.5*decimals, premium, blocksUntilExpiry-2);
+      await token.approve(options.address, 10000*decimals);
+      let now = await web3.eth.getBlock('latest').timestamp;
+      tx = await options.sellCall(tokenAddress, 100*decimals, 0.5*decimals, premium, optionExpiry-now);
     } catch(e){
       err = e;
     }
@@ -230,7 +230,7 @@ contract('Token Options', async() => {
 
   it('Sell new call', async() => {
     token.approve(options.address, 10000*decimals);
-    tx = await options.sellCall(tokenAddress, 100*decimals, 0.5*decimals, premium, blocksUntilExpiry);
+    tx = await options.sellCall(tokenAddress, 100*decimals, 0.5*decimals, premium, secUntilExpiry);
     optionID = tx.logs[0].args._optionID;
   });
 
@@ -259,8 +259,9 @@ contract('Token Options', async() => {
   });
 
   it('Sell new call', async() => {
+    advanceTime();
     token.approve(options.address, 10000*decimals);
-    tx = await options.sellCall(tokenAddress, 100*decimals, 0.5*decimals, premium, blocksUntilExpiry);
+    tx = await options.sellCall(tokenAddress, 100*decimals, 0.5*decimals, premium, secUntilExpiry);
     optionID = tx.logs[0].args._optionID;
   });
 
@@ -294,7 +295,7 @@ contract('Token Options', async() => {
 
   it('Sell new call', async() => {
     token.approve(options.address, 10000*decimals);
-    tx = await options.sellCall(tokenAddress, 100*decimals, 0.5*decimals, premium, 2);
+    tx = await options.sellCall(tokenAddress, 100*decimals, 0.5*decimals, premium, 1000);
     optionID = tx.logs[0].args._optionID;
   });
 
@@ -302,9 +303,10 @@ contract('Token Options', async() => {
     await options.buyOption(optionID, 10*decimals, {from: buyer1, value: 10*premium}); //Buy a call option for 10 tokens
   });
 
-  it('Fail to exercise call', async() => {
+  it('Fail to exercise call: too late', async() => {
     let err;
     try{
+      advanceTime();
       await options.exerciseCall(optionID, 10*decimals, {from: buyer1, value: 10*0.5*decimals});
     } catch(e){
       err = e;
@@ -312,7 +314,7 @@ contract('Token Options', async() => {
     assert.notEqual(err, undefined);
   });
 
-  it('Fail to cancel call', async() => {
+  it('Fail to cancel call: too late', async() => {
     let err;
     try{
       await options.cancelOption(optionID, {from: buyer1});
@@ -329,7 +331,7 @@ contract('Token Options', async() => {
 
   it('Sell new call', async() => {
     token.approve(options.address, 10000*decimals);
-    tx = await options.sellCall(tokenAddress, 100*decimals, 0.5*decimals, premium, blocksUntilExpiry);
+    tx = await options.sellCall(tokenAddress, 100*decimals, 0.5*decimals, premium, secUntilExpiry);
     optionID = tx.logs[0].args._optionID;
   });
 
@@ -344,7 +346,7 @@ contract('Token Options', async() => {
   it('Fail to sell put', async() => {
     let err;
     try{
-      await options.sellPut(tokenAddress, 100*decimals, 0.5*decimals, premium, blocksUntilExpiry);
+      await options.sellPut(tokenAddress, 100*decimals, 0.5*decimals, premium, secUntilExpiry);
     } catch(e){
       err = e;
     }
@@ -352,7 +354,8 @@ contract('Token Options', async() => {
   });
 
   it('Sell put', async() => {
-    tx = await options.sellPut(tokenAddress, 100*decimals, 0.5*decimals, premium, blocksUntilExpiry, {value: 100*0.5*decimals});
+    advanceTime();
+    tx = await options.sellPut(tokenAddress, 100*decimals, 0.5*decimals, premium, secUntilExpiry, {value: 100*0.5*decimals});
     optionID = tx.logs[0].args._optionID;
     console.log(optionID);
     optionStruct = await options.options(optionID);
@@ -372,7 +375,7 @@ contract('Token Options', async() => {
     assert.equal(optionTokens, 100*decimals);
     assert.equal(optionStrike, 0.5*decimals);
     assert.equal(optionPremium, premium);
-    assert.equal(optionExpiry, web3.eth.getBlock('latest').number + blocksUntilExpiry)
+    assert.equal(optionExpiry, web3.eth.getBlock('latest').timestamp + secUntilExpiry)
     assert.equal(optionPurchased, false);
     assert.equal(optionCancelled, false);
   });
@@ -438,7 +441,7 @@ contract('Token Options', async() => {
   });
 
   it('Sell put', async() => {
-    tx = await options.sellPut(tokenAddress, 100*decimals, 0.5*decimals, premium, blocksUntilExpiry, {value: 100*0.5*decimals});
+    tx = await options.sellPut(tokenAddress, 100*decimals, 0.5*decimals, premium, secUntilExpiry, {value: 100*0.5*decimals});
     optionID = tx.logs[0].args._optionID;
   });
 
@@ -462,7 +465,8 @@ contract('Token Options', async() => {
   });
 
   it('Sell put', async() => {
-    tx = await options.sellPut(tokenAddress, 100*decimals, 0.5*decimals, premium, blocksUntilExpiry, {value: 100*0.5*decimals});
+    advanceTime();
+    tx = await options.sellPut(tokenAddress, 100*decimals, 0.5*decimals, premium, secUntilExpiry, {value: 100*0.5*decimals});
     optionID = tx.logs[0].args._optionID;
   });
 
@@ -485,7 +489,7 @@ contract('Token Options', async() => {
   });
 
   it('Sell put', async() => {
-    tx = await options.sellPut(tokenAddress, 100*decimals, 0.5*decimals, premium, 2, {value: 100*0.5*decimals});
+    tx = await options.sellPut(tokenAddress, 100*decimals, 0.5*decimals, premium, 1000, {value: 100*0.5*decimals});
     optionID = tx.logs[0].args._optionID;
   });
 
@@ -496,6 +500,7 @@ contract('Token Options', async() => {
   it('Fail to exercise put', async() => {
     let err;
     try{
+      advanceTime();
       await options.exercisePut(optionID, 1*decimals, {from: buyer1});//expired
     } catch(e){
       err = e;
@@ -524,7 +529,7 @@ contract('Token Options', async() => {
   it('Fail to liquidate put', async() => {
     let err;
     try{
-      advanceBlock();
+      advanceTime();
       await options.liquidateOption(optionID);
     } catch(e){
       err = e;
